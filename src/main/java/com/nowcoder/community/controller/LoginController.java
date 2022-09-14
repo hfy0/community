@@ -5,6 +5,7 @@ import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
+import com.nowcoder.community.util.MailClient;
 import com.nowcoder.community.util.RedisKeyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,14 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -45,6 +45,9 @@ public class LoginController implements CommunityConstant {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private MailClient mailClient;
 
     @RequestMapping(path = "/register", method = RequestMethod.GET)
     public String getRegisterPage() {
@@ -154,6 +157,15 @@ public class LoginController implements CommunityConstant {
     public String logout(@CookieValue("ticket") String ticket) {
         userService.logout(ticket);
         return "redirect:/login";
+    }
+
+
+    @GetMapping("/sendMessage")
+    @ResponseBody
+    public String sendMessage() {
+        System.out.println("hello");
+        mailClient.sendMail("1756087686@qq.com", "激活账号", "123456", false);
+        return "success";
     }
 
 }
