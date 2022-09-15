@@ -168,4 +168,11 @@ public class LoginController implements CommunityConstant {
         return "success";
     }
 
+    @GetMapping("/test")
+    @ResponseBody
+    public String test() {
+        System.out.println("hello");
+        return "success";
+    }
+
 }
